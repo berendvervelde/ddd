@@ -1,0 +1,36 @@
+<?xml version="1.0" standalone="no" ?>
+<!DOCTYPE project PUBLIC "-//audacityproject-1.3.0//DTD//EN" "http://audacity.sourceforge.net/xml/audacityproject-1.3.0.dtd" >
+<project xmlns="http://audacity.sourceforge.net/xml/" projname="attack_archer_data" version="1.3.0" audacityversion="2.1.1" sel0="0.0000000000" sel1="0.0000000000" vpos="0" h="0.0000000000" zoom="587.3319046729" rate="44100.0" snapto="off" selectionformat="hh:mm:ss + milliseconds" frequencyformat="Hz" bandwidthformat="octaves">
+	<tags/>
+	<wavetrack name="401340__ckvoiceover__grunts" channel="2" linked="0" mute="0" solo="0" height="150" minimized="0" isSelected="1" rate="44100" gain="0.630957" pan="0.0">
+		<waveclip offset="0.00000000">
+			<sequence maxsamples="262144" sampleformat="262159" numsamples="41447">
+				<waveblock start="0">
+					<simpleblockfile filename="e00005c9.au" len="16294" min="-0.293518" max="0.318542" rms="0.022492"/>
+				</waveblock>
+				<waveblock start="16294">
+					<simpleblockfile filename="e0000476.au" len="25153" min="-0.562341" max="0.562335" rms="0.05342"/>
+				</waveblock>
+			</sequence>
+			<envelope numpoints="0"/>
+		</waveclip>
+	</wavetrack>
+	<wavetrack name="attack_ranger" channel="2" linked="0" mute="0" solo="0" height="150" minimized="0" isSelected="0" rate="44100" gain="0.891251" pan="0.0">
+		<waveclip offset="0.12399093">
+			<sequence maxsamples="262144" sampleformat="262159" numsamples="31110">
+				<waveblock start="0">
+					<simpleblockfile filename="e0000453.au" len="31110" min="-0.899719" max="0.885819" rms="0.059263"/>
+				</waveblock>
+			</sequence>
+			<envelope numpoints="0"/>
+		</waveclip>
+		<waveclip offset="0.00000000">
+			<sequence maxsamples="262144" sampleformat="262159" numsamples="5468">
+				<waveblock start="0">
+					<silentblockfile len="5468"/>
+				</waveblock>
+			</sequence>
+			<envelope numpoints="0"/>
+		</waveclip>
+	</wavetrack>
+</project>

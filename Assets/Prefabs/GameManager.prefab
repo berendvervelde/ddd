@@ -1,0 +1,141 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &100100000
+Prefab:
+  m_ObjectHideFlags: 1
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications: []
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 0}
+  m_RootGameObject: {fileID: 1278485363912218}
+  m_IsPrefabAsset: 1
+--- !u!1 &1278485363912218
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4283081307484762}
+  - component: {fileID: 114397066063013572}
+  - component: {fileID: 114511106841354992}
+  - component: {fileID: 114911743123420404}
+  m_Layer: 0
+  m_Name: GameManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4283081307484762
+Transform:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1278485363912218}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &114397066063013572
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1278485363912218}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a224d7f3b846b46c3b58587a1f3ca55c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  columns: 5
+  rows: 6
+  activemonsters: 0
+  levelType: 0
+  isLocked: 0
+  floorTiles:
+  - {fileID: 1828733742379146, guid: 204545fd4346f4132918c0ea401f4c7d, type: 2}
+  - {fileID: 1970750349673094, guid: 0e78010d480ff47b5a6d92f89f9c8b67, type: 2}
+  - {fileID: 1781977820423966, guid: 1cc8634ed02e84d36bc9b73ce63c2240, type: 2}
+  - {fileID: 1873659883803620, guid: 6519aa8d526a640e0988d8c390c8be26, type: 2}
+  - {fileID: 1183062298496584, guid: 89d8dca0de7274b7b9824dc451bc38e0, type: 2}
+  wallTiles:
+  - {fileID: 1994839561227512, guid: 5c55ef61bd51842af842f776c160180a, type: 2}
+  - {fileID: 1043971855706944, guid: d965b0b05c48548bf978926e742fecef, type: 2}
+  - {fileID: 1541194118566460, guid: 52642405194e54b2ea7c26198f153f00, type: 2}
+  - {fileID: 1271794323689006, guid: 4901c7fcf13ac4214afa351431ca16ed, type: 2}
+  - {fileID: 1207510098817140, guid: 079b7a172585d49d78aa0e79e3fcb059, type: 2}
+  - {fileID: 1557247996848596, guid: 0381591db0089469bb59cbc7f5e0aa24, type: 2}
+  - {fileID: 1614001815480524, guid: 011a3df3063364740816b19f4841ffc6, type: 2}
+  - {fileID: 1506157191945042, guid: fef68941bc84144c9876231a853cf9f7, type: 2}
+  itemTiles:
+  - {fileID: 1855003097308502, guid: 2d2549b217610420095e8f337b25a3f6, type: 2}
+  - {fileID: 1797729894672558, guid: b3f12382085334157a2783f0c8b3c7f6, type: 2}
+  - {fileID: 1594002368002410, guid: 273a7a1b686fd4371947f686e05e4b65, type: 2}
+  - {fileID: 1598676504346490, guid: 11de0b9c57b2a4c01956d28848691bcc, type: 2}
+  - {fileID: 1603790433028162, guid: d2de0d87283cb4231b058f6cd4a3d21d, type: 2}
+  - {fileID: 1638625579969548, guid: 08c73c91d5081435f804873637a85eaa, type: 2}
+  - {fileID: 1724634804162032, guid: 839dbdd40917b411cb1a98b66ee40ab9, type: 2}
+  weapons:
+  - {fileID: 1568488337109298, guid: 9e9af577f20fa499683bb6f31dc75c98, type: 2}
+  - {fileID: 1065720150763562, guid: 586049bd3a3cc49f7b6a764bb5945fc1, type: 2}
+  - {fileID: 1819460314275092, guid: d6b69f012112c4599be72b2a5dae9a74, type: 2}
+  - {fileID: 1297112032348946, guid: 34c2ac7a5e71c481d9ce3e4d03c54e23, type: 2}
+  - {fileID: 1885474421587672, guid: ac2ce225d85e24c61a8797185d6e1924, type: 2}
+  monsterTiles:
+  - {fileID: 1731266625164490, guid: feca46323240f47d6b909738001a2417, type: 2}
+  - {fileID: 1723816497834620, guid: 8d748e74eb4ac4a5b8998364db74511e, type: 2}
+  - {fileID: 1907833380076902, guid: 5a99e1ed2c19a401dbf09f8f228b7975, type: 2}
+  - {fileID: 1293916751912664, guid: ab5204f87d0ea4624b6a8526e03cb62e, type: 2}
+  - {fileID: 1181559883126264, guid: 6505c0a334ec34617a870f2200365881, type: 2}
+  - {fileID: 1707159143692126, guid: b320e94ac777a4f5b8432e58e837b0c4, type: 2}
+  - {fileID: 1927762773891480, guid: abdbdb81b49734b11989b30e7cedb2c4, type: 2}
+  - {fileID: 1531387261248406, guid: 23ccc283077aa407f80d6dcd320335d1, type: 2}
+  - {fileID: 1787636997993254, guid: 003efa5065d4e47819ebfeda150c2681, type: 2}
+  - {fileID: 1928082255215654, guid: a2bc2518b99b448b1b77dc160726c06e, type: 2}
+  - {fileID: 1701911429369196, guid: e14a918b486454a4bb2538198d6a8618, type: 2}
+  gemTile: {fileID: 1446711353053526, guid: 3694ede6140254f7eae03ded39ce09f9, type: 2}
+  keyTile: {fileID: 1174710754757632, guid: b60281e9e3698494a98fca39729f2c6c, type: 2}
+  exit: {fileID: 1007473785743642, guid: ce2ac014e01424b68883bda929e521ec, type: 2}
+  instantiatedExit: {fileID: 0}
+--- !u!114 &114511106841354992
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1278485363912218}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 25dd6b5c57b0d43debba1b4cdb020581, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  boardScript: {fileID: 0}
+  dataController: {fileID: 0}
+  playersTurn: 1
+  playersTurnEnd: 1
+  waiting: 0
+  playerPreviousHealth: 0
+  levelStartDelay: 2
+  player: {fileID: 0}
+  continueAvailable: 0
+  activeMonsters: 0
+--- !u!114 &114911743123420404
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1278485363912218}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 88d6a745e4f9040f38feffb8c9eb1c47, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  selectedCharacter: 0
+  musicVolume: -1
+  fxVolume: -1
+  cameraSize: -1
