@@ -28,6 +28,7 @@ public class Item : MonoBehaviour {
     [HideInInspector] public GameObject[] items;        // needed for the chest
     [HideInInspector] public int value;
     [HideInInspector] public bool hideFromList = false;
+    private Animator animator;
     public AudioClip invocationSound;
 
     /*types of things on the map
@@ -86,6 +87,8 @@ public class Item : MonoBehaviour {
         } else {
             initValue(0);
         }
+
+        this.animator = this.transform.GetChild(0).GetComponent<Animator>();
     }
 
     void OnDisable() {
@@ -253,6 +256,7 @@ public class Item : MonoBehaviour {
                 px == (x + 1) && py == y ||
                 px == x && py == (y - 1) ||
                 px == x && py == (y + 1)){
+                this.animator.SetTrigger("Attack");
                 p.hitFromBehind();
             }
         }

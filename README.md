@@ -13,7 +13,7 @@ version 0.8
 TODO: permanent updates for gold
 
 version 0.7
-TODO: all monsters done, death, treemonster, egg/snake woman added
+TODO: all monsters done, death, treemonster, egg/snake woman added, double gold and fire bugsfixed
 
 -----------------------------------------
 version 0.6
