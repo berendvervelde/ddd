@@ -358,6 +358,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 91649cc349a0440f299470ed445b3161, type: 3}
   - {fileID: 8300000, guid: b18df50adbde14d85b31afe3eaa02773, type: 3}
   - {fileID: 8300000, guid: 7066bcc01dab24515b88e253b57be184, type: 3}
+  - {fileID: 8300000, guid: f23b9097490fc4188a5c1c72fe1d258a, type: 3}
   lowPitchRange: 0.95
   highPitchRange: 1.05
   playMusic: 0

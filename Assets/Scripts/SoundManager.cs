@@ -10,7 +10,8 @@ using System.Collections;
             locaction_sheep = 3,
             location_grab_coin = 4,
             location_grab_gem = 5,
-            location_gulp = 6;
+            location_gulp = 6,
+            location_cracking = 7;
         public AudioSource efxSource1;
         public AudioSource efxSource2;
         public AudioSource musicSource;

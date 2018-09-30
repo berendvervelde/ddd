@@ -60,7 +60,9 @@ public class Item : MonoBehaviour {
         105: Count de Nostradame
         106: Prancer
         107: sebastian              - 50% chance of poison if hit with bare hands
-        108: willo                  - 50% chance of stinging you if you walk past
+        108: wasp                   - 50% chance of stinging you if you walk past
+        109: egg                    - will hatch into snakewoman
+        110: snakewoman
 		...
 	*/
     private Text values;
@@ -68,7 +70,6 @@ public class Item : MonoBehaviour {
     public GameObject spawnParticles;
     public int type;
 
-    // Use this for initialization
     void Start() {
         this.values = this.valuesCanvas.GetComponent<Text>();
         // unicorn random name
@@ -90,7 +91,6 @@ public class Item : MonoBehaviour {
 
         this.animator = this.transform.GetChild(0).GetComponent<Animator>();
     }
-
     void OnDisable() {
         if (this.tempObject != null){
             Destroy(this.tempObject);
@@ -100,7 +100,6 @@ public class Item : MonoBehaviour {
             Debug.Log("active monsters: " + GameManager.instance.activeMonsters);
         }
     }
-
     public void finishFullInit(GameObject[] m, GameObject[] i) {
         // these lists are needed for chests
         this.monsters = m;
@@ -108,7 +107,6 @@ public class Item : MonoBehaviour {
         initValue(GameManager.instance.gameProgress.steps);
         this.show = false;
     }
-
     private Text getChildTextComponent() {
         // find the right child by finding its tag
         for (int i = 0; i < this.transform.childCount; i++) {
@@ -118,7 +116,6 @@ public class Item : MonoBehaviour {
         }
         return null;
     }
-
     public void setShow(bool particles) {
         if (particles) {
             Instantiate(spawnParticles, this.transform.position, this.transform.rotation);
@@ -137,7 +134,6 @@ public class Item : MonoBehaviour {
             }
         }
     }
-
     // enemy spawns coin, chest spawns random, some enemies spawn other enemies
     public void ItemSpawnCoin() {
         // spawn coin
@@ -149,12 +145,10 @@ public class Item : MonoBehaviour {
         //GameManager.instance.RemoveItemFromList(this);
         Destroy(this.gameObject);
     }
-
     // for feedback purposes show some animation
     public void ItemFoundFeedback(bool killThis) {
         StartCoroutine(AnimateFoundItem(Instantiate(this.foundFeedbackObject, this.transform.position, Quaternion.identity), killThis));
     }
-
     public void ChestSpawnRandom() {
         GameObject item;
         Item i;
@@ -172,7 +166,6 @@ public class Item : MonoBehaviour {
         GameManager.instance.AddItemToList(i);
         Destroy(this.gameObject);
     }
-
     public void initValue(int playerSteps) {
         this.value = Random.Range(this.minValue, this.minValue + valueRandomizer + (int)(timeValueMultiplier * playerSteps));
         if (this.value > this.maxValue) {
@@ -196,8 +189,10 @@ public class Item : MonoBehaviour {
         }
     }
     public void countDownBomb() {
-        updateTimer(--this.timerValue);
-        if (this.timerValue < 1) {
+        if (this.timerValue > 0){
+            updateTimer(--this.timerValue);
+        } else if (this.timerValue == 0) {
+            this.timerValue = -1;
             Animator a = findComponentInChildren<Animator>(this.gameObject);
             a.SetTrigger("AnimateItem");
             SoundManager.instance.playFxClip(SoundManager.location_bomb);
@@ -205,10 +200,9 @@ public class Item : MonoBehaviour {
             GameManager.instance.player.gameCamera.GetComponent<CameraShake>().ShakeCamera(5, 1f);
         }
     }
-
     public void countDownSpread() {
         this.timerValue--;
-        if (this.timerValue < 1) {
+        if (this.timerValue == 0) {
             this.timerValue = this.spreadPauseStep;
             bushFire();
         }
@@ -260,6 +254,21 @@ public class Item : MonoBehaviour {
                 p.hitFromBehind();
             }
         }
+    }
+    public void waitEgg(){
+        this.timerValue--;
+        if(this.timerValue == 0){
+            this.timerValue = -1;
+            StartCoroutine(AnimateEggHatching());
+        }
+    }
+    private void hatchEgg(){
+        GameObject item = Instantiate(this.spawnObject, this.transform.position, Quaternion.identity);
+        Item i = item.GetComponent<Item>();
+        i.setShow(true);
+        i.value = this.baseValue + 10;
+        GameManager.instance.AddItemToList(i);
+        Destroy(this.gameObject);
     }
     public void shootRainbows(){
 
@@ -336,7 +345,6 @@ public class Item : MonoBehaviour {
         }
         
     }
-
     public void countDownZombieSpawn(){
         this.timerValue--;
         if (this.timerValue == 0) {
@@ -345,7 +353,6 @@ public class Item : MonoBehaviour {
             SoundManager.instance.playFxClip(SoundManager.location_zombieSpawn);
         }
     }
-
     private void bushFire() {
         Item[] targets = new Item[4];
         int pointer = 0;
@@ -364,7 +371,6 @@ public class Item : MonoBehaviour {
             Destroy(targets[choice].gameObject);
         }
     }
-
     private int addToAvailableItems(Item[] targets, int x, int y, int pointer) {
         if (x > -1 && x < GameManager.instance.boardScript.columns && y > -1 && y < GameManager.instance.boardScript.rows) {
             Item i = GameManager.instance.itemMap[x, y];
@@ -399,7 +405,6 @@ public class Item : MonoBehaviour {
         }
         Destroy(this.gameObject);
     }
-
     private void explode(int x, int y) {
         if (x > -1 && x < GameManager.instance.boardScript.columns && y > -1 && y < GameManager.instance.boardScript.rows) {
             Item i = GameManager.instance.itemMap[x, y];
@@ -425,7 +430,6 @@ public class Item : MonoBehaviour {
             }
         }
     }
-
     private T findComponentInChildren<T>(GameObject go) {
         // find the right child by finding its tag
         for (int i = 0; i < go.transform.childCount; i++) {
@@ -441,7 +445,6 @@ public class Item : MonoBehaviour {
         a.SetTrigger("AnimateItem");
         StartCoroutine(AnimateOpenChest());
     }
-
     protected IEnumerator AnimateOpenChest() {
         yield return new WaitForSeconds(0.3f);
         ChestSpawnRandom();
@@ -449,6 +452,13 @@ public class Item : MonoBehaviour {
     protected IEnumerator AnimateBombExplode() {
         yield return new WaitForSeconds(0.3f);
         bombExplode();
+    }
+    protected IEnumerator AnimateEggHatching() {
+        Animator a = findComponentInChildren<Animator>(this.gameObject);
+        a.SetTrigger("Hatching");
+        SoundManager.instance.playFxClip(SoundManager.location_cracking);
+        yield return new WaitForSeconds(1.4f);
+        hatchEgg();
     }
     protected IEnumerator AnimateFoundItem(GameObject go, bool killThis) {
         SpriteRenderer sr = go.GetComponent<SpriteRenderer>();
@@ -464,7 +474,6 @@ public class Item : MonoBehaviour {
             Destroy(this.gameObject);
         }
     }
-
     protected IEnumerator AnimateBrieflyAppearing(GameObject go) {
         SpriteRenderer sr = go.GetComponent<SpriteRenderer>();
 
@@ -481,7 +490,6 @@ public class Item : MonoBehaviour {
         }
         Destroy(go);
     }
-
     protected IEnumerator SmoothMovement(GameObject go, Vector3 end) {
         float inverseMoveTime = 12f;
         Rigidbody2D rb2D = go.GetComponent<Rigidbody2D>();

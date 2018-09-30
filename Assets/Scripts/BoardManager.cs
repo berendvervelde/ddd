@@ -36,7 +36,8 @@ public class BoardManager : MonoBehaviour {
         location_vampire = 9,
         location_unicorn = 10,
         location_wasp = 5,
-        location_spider = 4;
+        location_spider = 4,
+        location_egg = 11;
 
     [HideInInspector] public int columns = 5;
     [HideInInspector] public int rows = 6;
@@ -347,12 +348,9 @@ public class BoardManager : MonoBehaviour {
                 break;
             case GameManager.level_test:
                 monsterCount = 0;
-                int spiderCount = (int)(availablePlaces * 1 / 10);
-                AddTiles(this.monsterTiles[BoardManager.location_spider], spiderCount);
-                itemCount += spiderCount;
-                int waspCount = (int)(availablePlaces * 1 / 10);
-                AddTiles(this.monsterTiles[BoardManager.location_wasp], waspCount);
-                itemCount += waspCount;
+                int testMonsterCount = (int)(availablePlaces * 2 / 10);
+                AddTiles(this.monsterTiles[BoardManager.location_egg], testMonsterCount);
+                itemCount += testMonsterCount;
                 break;
         }
 

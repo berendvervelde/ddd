@@ -99,6 +99,7 @@ MonoBehaviour:
   - {fileID: 1787636997993254, guid: 003efa5065d4e47819ebfeda150c2681, type: 2}
   - {fileID: 1928082255215654, guid: a2bc2518b99b448b1b77dc160726c06e, type: 2}
   - {fileID: 1701911429369196, guid: e14a918b486454a4bb2538198d6a8618, type: 2}
+  - {fileID: 1358847094451728, guid: 3f34e5fcc43fa4fe19e88dfd417b5ff6, type: 2}
   gemTile: {fileID: 1446711353053526, guid: 3694ede6140254f7eae03ded39ce09f9, type: 2}
   keyTile: {fileID: 1174710754757632, guid: b60281e9e3698494a98fca39729f2c6c, type: 2}
   exit: {fileID: 1007473785743642, guid: ce2ac014e01424b68883bda929e521ec, type: 2}
@@ -120,7 +121,6 @@ MonoBehaviour:
   playersTurnEnd: 1
   waiting: 0
   playerPreviousHealth: 0
-  levelStartDelay: 2
   player: {fileID: 0}
   continueAvailable: 0
   activeMonsters: 0

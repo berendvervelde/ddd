@@ -178,9 +178,7 @@ public class GameManager : MonoBehaviour {
     [HideInInspector] public bool playersTurnEnd = true;
     [HideInInspector] public bool waiting = false;
     [HideInInspector] public int playerPreviousHealth;      // needed for the fullHealthToggle
-
     [HideInInspector] public Item[,] itemMap;
-
     private GameObject levelImage;
     [HideInInspector] public Player player;
     private bool continueClicked = false;
@@ -199,7 +197,6 @@ public class GameManager : MonoBehaviour {
     private Toggle addWeaponToggle;
     private int declaredItems = 0;                      // if declareditems equals items itemsOnBoard we know that all items have initialized
     private int itemsOnBoard = 0;
-
     [HideInInspector] public bool continueAvailable = false;
     [HideInInspector] public GameProgress gameProgress;
     [HideInInspector] public PermanentData permanentData;
@@ -207,9 +204,7 @@ public class GameManager : MonoBehaviour {
     [HideInInspector] public int activeMonsters;
     private int gameState = GameManager.state_intro;
 
-
     void Awake() {
-
         //Make GameManager singleton
         if (instance == null) {
             instance = this;
@@ -250,8 +245,6 @@ public class GameManager : MonoBehaviour {
         setSoundVolume();
         SoundManager.instance.playMusic = true;
     }
-
-
 
     //this is called only once, and the paramter tell it to be called only after the scene was loaded
     //(otherwise, our Scene Load callback would be called the very first load, and we don't want that)
@@ -327,7 +320,6 @@ public class GameManager : MonoBehaviour {
     public void restoreGame(){
         this.gameProgress = this.restoredGameProgress;
     }
-
     private void initDefaultValuesPreferences(){
         int sc = this.dataController.selectedCharacter;
         if (sc < 0){
@@ -346,9 +338,7 @@ public class GameManager : MonoBehaviour {
             this.dataController.setFxVolume(0.8f);
         }
     }
-
     void InitGame() {
-
         this.gameState = GameManager.state_doing_setup;
         this.continueClicked = false;
 
@@ -366,7 +356,6 @@ public class GameManager : MonoBehaviour {
         }
         // the rest can only be done after the player has registered itself with GameManager, so we continue in finishLevelSetup()
     }
-
     public void finishLevelSetup(){
         // we pick up where we left off in the InitGame() method now that the player has arrived
        Text levelText = this.player.levelText.GetComponent<Text>();
@@ -390,11 +379,9 @@ public class GameManager : MonoBehaviour {
     public void saveGameState(){
         this.dataController.saveGameProgress(this.gameProgress);
     }
-
     public void deleteGameState(){
         this.dataController.deleteGameProgress();
     }
-
     private void initGemManagement(){
         this.gemAmountText = this.player.gemAmountText.GetComponent<Text>();
         this.maxHealthText = this.player.maxHealthText.GetComponent<Text>();
@@ -619,11 +606,13 @@ public class GameManager : MonoBehaviour {
             }
         } else {
             TileMapCoordinates iC = convertCoordinatesToTileMap(item.transform.position.x, item.transform.position.y);
-            // sometimes multiple gameobjects get created @ the same location @ the same time, like the bushfire
-            // TODO: debug. this does not work with chests
-            // if(this.itemMap[iC.x, iC.y] !=null){
-            //     Destroy(this.itemMap[iC.x, iC.y].gameObject);
-            // }
+            // sometimes multiple gameobjects get created @ the same location @ the same time, like the bushfire or gold
+            if(this.itemMap[iC.x, iC.y] !=null && (
+                this.itemMap[iC.x, iC.y].type == 102 || 
+                this.itemMap[iC.x, iC.y].type == 31
+                )){
+                    Destroy(this.itemMap[iC.x, iC.y].gameObject);
+                }
             this.itemMap[iC.x, iC.y] = item;
         }
     }
@@ -714,7 +703,7 @@ public class GameManager : MonoBehaviour {
         int totalMonsters = 0;
         Item[] monsters = new Item[4];
         Item i = null;
-        //check around to see if you are surrounded by monsters
+        //check to see if the knight is surrounded by monsters
         if (px < (this.boardScript.columns - 1)){
             i = this.itemMap[px + 1, py];
             if(i != null && i.type > 99){
@@ -808,6 +797,9 @@ public class GameManager : MonoBehaviour {
                         break;
                         case 108:
                         it.waspSting();         // wasps might sting
+                        break;
+                        case 109:
+                        it.waitEgg();
                         break;
                     }
                 }
