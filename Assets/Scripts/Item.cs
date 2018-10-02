@@ -14,7 +14,7 @@ public class Item : MonoBehaviour {
     public int timerValue = 10;                 // bombtimer. also zombiespawner and unicorn shooter position
     public int valueRandomizer = 1;
     public float timeValueMultiplier = 0.1f;
-    private int spreadPauseStep = 5;                // bushfire and necromancer spreadrate
+    private int spreadPauseStep = 5;                // bushfire, tree and necromancer spreadrate
     public bool showValue = true;
     public bool giveKey = false;                    // if true this item gives a key of the exit to the player
     public bool indestructible = false;             // item cannot be detroyed by bombs
@@ -63,6 +63,9 @@ public class Item : MonoBehaviour {
         108: wasp                   - 50% chance of stinging you if you walk past
         109: egg                    - will hatch into snakewoman
         110: snakewoman
+        111: small tree             - Spruce Banner
+        112: medium tree            - Log Ross
+        113: large tree             - the incredible Trunk
 		...
 	*/
     private Text values;
@@ -270,6 +273,26 @@ public class Item : MonoBehaviour {
         GameManager.instance.AddItemToList(i);
         Destroy(this.gameObject);
     }
+
+    public void growTree(bool breed){
+        this.timerValue--;
+        if(breed){
+            if(this.timerValue == 0){
+                this.timerValue = this.spreadPauseStep;
+                plantTree();
+            }
+        } else {
+            if(this.timerValue == 0){
+                this.timerValue = -1;
+                GameObject item = Instantiate(this.spawnObject, this.transform.position, Quaternion.identity);
+                Item i = item.GetComponent<Item>();
+                i.setShow(true);
+                i.value = i.baseValue = this.baseValue + 3;
+                GameManager.instance.AddItemToList(i);
+                Destroy(this.gameObject);
+            }
+        }
+    }
     public void shootRainbows(){
 
         int x = (int)(this.gameObject.transform.position.x / BoardManager.wMultiplier);
@@ -368,9 +391,46 @@ public class Item : MonoBehaviour {
             GameObject newFire = Instantiate(this.gameObject, targets[choice].gameObject.transform.position, this.transform.rotation);
             Item it = newFire.GetComponent<Item>();
             it.timerValue = this.spreadPauseStep;
+            //replace item with bushfire
             Destroy(targets[choice].gameObject);
         }
     }
+    private void plantTree() {
+        
+        TileMapCoordinates[] targets = new TileMapCoordinates[4];
+        int pointer = 0;
+        int x = (int)(this.gameObject.transform.position.x / BoardManager.wMultiplier);
+        int y = (int)(this.gameObject.transform.position.y / BoardManager.hMultiplier);
+
+        int px = (int)(GameManager.instance.player.gameObject.transform.position.x / BoardManager.wMultiplier);
+        int py = (int)(GameManager.instance.player.gameObject.transform.position.y / BoardManager.hMultiplier);
+
+        bool isPositionAvailable = false;
+        Vector3 treePos = new Vector3(x * BoardManager.wMultiplier, y * BoardManager.hMultiplier, 0f);
+
+        if (x < GameManager.instance.boardScript.columns - 1 && GameManager.instance.itemMap[x + 1,y] == null && !(px == x+1 && py == y)){
+            isPositionAvailable = true;
+            treePos.x = (x+1) * BoardManager.wMultiplier;
+        } else if (y < GameManager.instance.boardScript.rows - 1 && GameManager.instance.itemMap[x,y + 1] == null  && !(px == x && py == y+1)){
+            isPositionAvailable = true;
+            treePos.y = (y+1) * BoardManager.hMultiplier;
+        } else if (y > 0 && GameManager.instance.itemMap[x,y-1] == null  && !(px == x && py == y-1)){
+            isPositionAvailable = true;
+            treePos.y = (y-1) * BoardManager.hMultiplier;
+        } else if (x > 0 && GameManager.instance.itemMap[x - 1,y] == null  && !(px == x-1 && py == y)){
+            isPositionAvailable = true;
+            treePos.x = (x-1) * BoardManager.wMultiplier;
+        }
+
+        if (isPositionAvailable) {
+            int choice = Random.Range(0, pointer);
+            GameObject newTree = Instantiate(this.spawnObject, treePos, this.transform.rotation);
+            Item it = newTree.GetComponent<Item>();
+            it.baseValue = it.value = 4;
+            it.timerValue = this.spreadPauseStep;
+        }
+    }
+
     private int addToAvailableItems(Item[] targets, int x, int y, int pointer) {
         if (x > -1 && x < GameManager.instance.boardScript.columns && y > -1 && y < GameManager.instance.boardScript.rows) {
             Item i = GameManager.instance.itemMap[x, y];
@@ -380,6 +440,7 @@ public class Item : MonoBehaviour {
         }
         return pointer;
     }
+
     public void bombExplode() {
         int x = (int)(this.gameObject.transform.position.x / BoardManager.wMultiplier);
         int y = (int)(this.gameObject.transform.position.y / BoardManager.hMultiplier);

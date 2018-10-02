@@ -8,17 +8,6 @@ using Random = UnityEngine.Random;
 
 public class GameManager : MonoBehaviour {
 
-    [Serializable]
-    public class TileMapCoordinates {
-        public int x;             //Minimum value for our Count class.
-        public int y;             //Maximum value for our Count class.
-
-        //Assignment constructor.
-        public TileMapCoordinates(int x, int y) {
-            this.x = x;
-            this.y = y;
-        }
-    }
     public const int
         level_standard = 0,
         level_bomb = 1,
@@ -606,10 +595,10 @@ public class GameManager : MonoBehaviour {
             }
         } else {
             TileMapCoordinates iC = convertCoordinatesToTileMap(item.transform.position.x, item.transform.position.y);
-            // sometimes multiple gameobjects get created @ the same location @ the same time, like the bushfire or gold
+            // sometimes multiple gameobjects get created @ the same location @ the same time, like the bushfire or treemonster
             if(this.itemMap[iC.x, iC.y] !=null && (
-                this.itemMap[iC.x, iC.y].type == 102 || 
-                this.itemMap[iC.x, iC.y].type == 31
+                item.type == 102 ||
+                item.type == 111
                 )){
                     Destroy(this.itemMap[iC.x, iC.y].gameObject);
                 }
@@ -798,8 +787,17 @@ public class GameManager : MonoBehaviour {
                         case 108:
                         it.waspSting();         // wasps might sting
                         break;
-                        case 109:
+                        case 109:               // egg -> snakewoman
                         it.waitEgg();
+                        break;
+                        case 111:               //small tree
+                        it.growTree(false);
+                        break;
+                        case 112:               //medium tree
+                        it.growTree(false);
+                        break;
+                        case 113:               //large tree
+                        it.growTree(true);
                         break;
                     }
                 }
