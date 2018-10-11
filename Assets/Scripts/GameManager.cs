@@ -595,10 +595,11 @@ public class GameManager : MonoBehaviour {
             }
         } else {
             TileMapCoordinates iC = convertCoordinatesToTileMap(item.transform.position.x, item.transform.position.y);
-            // sometimes multiple gameobjects get created @ the same location @ the same time, like the bushfire or treemonster
+            // sometimes multiple gameobjects get created @ the same location @ the same time, like the bushfire, bunny or treemonster
             if(this.itemMap[iC.x, iC.y] !=null && (
                 item.type == 102 ||
-                item.type == 111
+                item.type == 111 ||
+                item.type == 114
                 )){
                     Destroy(this.itemMap[iC.x, iC.y].gameObject);
                 }
@@ -798,6 +799,12 @@ public class GameManager : MonoBehaviour {
                         break;
                         case 113:               //large tree
                         it.growTree(true);
+                        break;
+                        case 114:               // rabbit
+                        it.breed();
+                        break;
+                        case 115:               // death
+                        it.feastUponMonsters();
                         break;
                     }
                 }

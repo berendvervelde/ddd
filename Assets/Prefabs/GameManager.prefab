@@ -101,6 +101,7 @@ MonoBehaviour:
   - {fileID: 1701911429369196, guid: e14a918b486454a4bb2538198d6a8618, type: 2}
   - {fileID: 1358847094451728, guid: 3f34e5fcc43fa4fe19e88dfd417b5ff6, type: 2}
   - {fileID: 1838025520764756, guid: 4cd723333fe3044d8b9769d12aef935e, type: 2}
+  - {fileID: 1010674635941974, guid: 3f10e2921aa5e44dda60867327882506, type: 2}
   gemTile: {fileID: 1446711353053526, guid: 3694ede6140254f7eae03ded39ce09f9, type: 2}
   keyTile: {fileID: 1174710754757632, guid: b60281e9e3698494a98fca39729f2c6c, type: 2}
   exit: {fileID: 1007473785743642, guid: ce2ac014e01424b68883bda929e521ec, type: 2}

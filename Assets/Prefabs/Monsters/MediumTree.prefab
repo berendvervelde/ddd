@@ -268,7 +268,7 @@ MonoBehaviour:
   items: []
   value: 0
   hideFromList: 0
-  invocationSound: {fileID: 8300000, guid: c010e183188e04f619683ce12b0d3b6a, type: 3}
+  invocationSound: {fileID: 0}
   show: 0
   spawnParticles: {fileID: 1776468103234216, guid: d8748036215964a78a9949e74df9102d,
     type: 2}

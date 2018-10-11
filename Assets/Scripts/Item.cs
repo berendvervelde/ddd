@@ -63,9 +63,11 @@ public class Item : MonoBehaviour {
         108: wasp                   - 50% chance of stinging you if you walk past
         109: egg                    - will hatch into snakewoman
         110: snakewoman
-        111: small tree             - Spruce Banner
-        112: medium tree            - Log Ross
-        113: large tree             - the incredible Trunk
+        111: small tree
+        112: medium tree
+        113: large tree
+        114: Bunny                  - breeder
+        115: DEATH                  - impossible to kill
 		...
 	*/
     private Text values;
@@ -293,6 +295,10 @@ public class Item : MonoBehaviour {
             }
         }
     }
+
+    public void feastUponMonsters(){
+        //see it there are monsters around and steal their health
+    }
     public void shootRainbows(){
 
         int x = (int)(this.gameObject.transform.position.x / BoardManager.wMultiplier);
@@ -366,7 +372,6 @@ public class Item : MonoBehaviour {
             
             //StartCoroutine(AnimateBrieflyAppearing(this.tempObject));
         }
-        
     }
     public void countDownZombieSpawn(){
         this.timerValue--;
@@ -395,10 +400,45 @@ public class Item : MonoBehaviour {
             Destroy(targets[choice].gameObject);
         }
     }
+
+    public void breed(){
+        this.timerValue--;
+        if (this.timerValue == 0) {
+            this.timerValue = 4;
+            int x = (int)(this.gameObject.transform.position.x / BoardManager.wMultiplier);
+            int y = (int)(this.gameObject.transform.position.y / BoardManager.hMultiplier);
+
+            int px = (int)(GameManager.instance.player.gameObject.transform.position.x / BoardManager.wMultiplier);
+            int py = (int)(GameManager.instance.player.gameObject.transform.position.y / BoardManager.hMultiplier);
+
+            bool isPositionAvailable = false;
+            Vector3 emptyPos = new Vector3(x * BoardManager.wMultiplier, y * BoardManager.hMultiplier, 0f);
+
+            if (x < GameManager.instance.boardScript.columns - 1 && GameManager.instance.itemMap[x + 1,y] == null && !(px == x+1 && py == y)){
+                isPositionAvailable = true;
+                emptyPos.x = (x+1) * BoardManager.wMultiplier;
+            } else if (y < GameManager.instance.boardScript.rows - 1 && GameManager.instance.itemMap[x,y + 1] == null  && !(px == x && py == y+1)){
+                isPositionAvailable = true;
+                emptyPos.y = (y+1) * BoardManager.hMultiplier;
+            } else if (y > 0 && GameManager.instance.itemMap[x,y-1] == null  && !(px == x && py == y-1)){
+                isPositionAvailable = true;
+                emptyPos.y = (y-1) * BoardManager.hMultiplier;
+            } else if (x > 0 && GameManager.instance.itemMap[x - 1,y] == null  && !(px == x-1 && py == y)){
+                isPositionAvailable = true;
+                emptyPos.x = (x-1) * BoardManager.wMultiplier;
+            }
+
+            if (isPositionAvailable) {
+                GameObject newMonster = Instantiate(this.gameObject, emptyPos, this.transform.rotation);
+                Item it = newMonster.GetComponent<Item>();
+                it.baseValue = it.value = 2;
+                it.timerValue = 4;
+                it.setShow(true);
+            }
+        }
+    }
     private void plantTree() {
         
-        TileMapCoordinates[] targets = new TileMapCoordinates[4];
-        int pointer = 0;
         int x = (int)(this.gameObject.transform.position.x / BoardManager.wMultiplier);
         int y = (int)(this.gameObject.transform.position.y / BoardManager.hMultiplier);
 
@@ -423,11 +463,11 @@ public class Item : MonoBehaviour {
         }
 
         if (isPositionAvailable) {
-            int choice = Random.Range(0, pointer);
             GameObject newTree = Instantiate(this.spawnObject, treePos, this.transform.rotation);
             Item it = newTree.GetComponent<Item>();
             it.baseValue = it.value = 4;
             it.timerValue = this.spreadPauseStep;
+            it.setShow(true);
         }
     }
 
