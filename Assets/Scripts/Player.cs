@@ -287,9 +287,9 @@ public class Player : MonoBehaviour {
         this.hasKey = true;
         this.foundKeyPanelImage.SetActive(this.hasKey);
     }
-    public void hitFromBehind(){
+    public void hitFromBehind(int hurt){
         StartCoroutine(AnimateFoundItem(Instantiate(this.greySkull, this.transform.position, Quaternion.identity), true));
-        setHealth(this.health - 1);
+        setHealth(this.health - hurt);
         CheckIfGameOver();
         playCharacterHurtSound();
     }
@@ -392,6 +392,7 @@ public class Player : MonoBehaviour {
 
         if (this.heldItemValue > i.value) {
             // remove those extra 3 hitpoints, but only if rogue and advantage
+            i.isAlreadyDead = true;
             if (this.selectedCharacter == GameManager.character_rogue && i.value < 4 && rogueAdvantage) {
                 this.heldItemValue -= 3;
             } else {
@@ -409,7 +410,12 @@ public class Player : MonoBehaviour {
             Destroy(this.heldItem);
             this.heldItem = null;
             StartCoroutine(SlashMonster(this.weaponSlash[this.selectedCharacter], i, false));
+            // if death is hit, its timer is reset
+            if(i.type == 115){
+                i.updateTimer(i.timerStartValue);
+            }
         } else {
+            i.isAlreadyDead = true;
             Destroy(this.heldItem);
             this.heldItem = null;
             if(i.giveKey){
@@ -433,6 +439,7 @@ public class Player : MonoBehaviour {
         for(int i = 0; i < monsters.Length; i++){
             if (monsters[i] != null){
                 if (hitStrength >= monsters[i].value) {
+                    monsters[i].isAlreadyDead = true;
                     if(monsters[i].giveKey){
                         keyFound();
                     }
@@ -457,6 +464,7 @@ public class Player : MonoBehaviour {
     private void doSecondHit(Item i, int hitStrength) {
         if(i != null){
             if (hitStrength >= i.value) {
+                i.isAlreadyDead = true;
                 if(i.giveKey){
                     keyFound();
                 }
@@ -486,8 +494,8 @@ public class Player : MonoBehaviour {
         bi.hideFromList = true;
         bi.setShow(true);
         bi.value = this.heldItemValue;
-        // calling countdown with timevalue 1 will detonate the bomb right away
-        bi.timerValue = 1;
+        // calling countdown with timevalue 0 will detonate the bomb right away
+        bi.timerValue = 0;
         bi.countDownBomb();
         Destroy(this.heldItem);
         this.heldItem = null;
@@ -560,6 +568,7 @@ public class Player : MonoBehaviour {
         //Check if the tag of the trigger collided with is Enemy.
         else if (other.tag == "Enemy") {
             Item e = other.gameObject.GetComponent<Item>();
+            e.isAlreadyDead = true;
             if(e.giveKey){
                 keyFound();
             }

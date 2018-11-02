@@ -286,7 +286,7 @@ MonoBehaviour:
   maxValue: 20
   minLevel: 50
   maxLevel: 50
-  timerValue: 10
+  timerStartValue: 5
   valueRandomizer: 3
   timeValueMultiplier: 0.1
   showValue: 1
@@ -294,8 +294,10 @@ MonoBehaviour:
   indestructible: 0
   coin: {fileID: 1598676504346490, guid: 11de0b9c57b2a4c01956d28848691bcc, type: 2}
   tempObject: {fileID: 0}
-  foundFeedbackObject: {fileID: 0}
+  foundFeedbackObject: {fileID: 1320473428859748, guid: c14c6ee59c9564b99b330e1d2985997c,
+    type: 2}
   spawnObject: {fileID: 0}
+  specialFx: {fileID: 1404875335582074, guid: 152bcd62b3e7f42ee9314ce2cc81c209, type: 2}
   valuesCanvas: {fileID: 223420298820688374}
   nameCanvas: {fileID: 0}
   monsters: []

@@ -11,10 +11,10 @@ public class Item : MonoBehaviour {
     public int maxValue = 10;                   // health of monster, value of coin
     public int minLevel = 1;                    // minlevel the monster will appear.
     public int maxLevel = -1;                   // maxlevel the monster will appear, -1 means all
-    public int timerValue = 10;                 // bombtimer. also zombiespawner and unicorn shooter position
+    public int timerStartValue = 10;            // bombtimer. also zombiespawner and unicorn shooter position
+    [HideInInspector] public int timerValue = 10;                // bushfire, tree and necromancer spreadrate
     public int valueRandomizer = 1;
     public float timeValueMultiplier = 0.1f;
-    private int spreadPauseStep = 5;                // bushfire, tree and necromancer spreadrate
     public bool showValue = true;
     public bool giveKey = false;                    // if true this item gives a key of the exit to the player
     public bool indestructible = false;             // item cannot be detroyed by bombs
@@ -22,12 +22,14 @@ public class Item : MonoBehaviour {
     public GameObject tempObject;
     public GameObject foundFeedbackObject;
     public GameObject spawnObject;
+    public GameObject specialFx;
     public Canvas valuesCanvas;
     public Canvas nameCanvas;
     [HideInInspector] public GameObject[] monsters;     // needed for the chest
     [HideInInspector] public GameObject[] items;        // needed for the chest
     [HideInInspector] public int value;
     [HideInInspector] public bool hideFromList = false;
+    [HideInInspector] public bool isAlreadyDead = false;
     private Animator animator;
     public AudioClip invocationSound;
 
@@ -76,6 +78,7 @@ public class Item : MonoBehaviour {
     public int type;
 
     void Start() {
+        this.timerValue = this.timerStartValue;
         this.values = this.valuesCanvas.GetComponent<Text>();
         // unicorn random name
         if (this.type == 106 && this.nameCanvas != null){
@@ -190,7 +193,7 @@ public class Item : MonoBehaviour {
     public void updateTimer(int timer) {
         this.timerValue = timer;
         if (this.values !=null && this.showValue) {
-            this.values.text = this.timerValue + " / " + this.value;
+            this.values.text = this.timerValue + "/" + this.value;
         }
     }
     public void countDownBomb() {
@@ -208,7 +211,7 @@ public class Item : MonoBehaviour {
     public void countDownSpread() {
         this.timerValue--;
         if (this.timerValue == 0) {
-            this.timerValue = this.spreadPauseStep;
+            this.timerValue = this.timerStartValue;
             bushFire();
         }
     }
@@ -221,7 +224,7 @@ public class Item : MonoBehaviour {
         int px = (int)(GameManager.instance.player.gameObject.transform.position.x / BoardManager.wMultiplier);
         int py = (int)(GameManager.instance.player.gameObject.transform.position.y / BoardManager.hMultiplier);
         if (px == (x - 1) && py == y){
-            p.hitFromBehind();
+            p.hitFromBehind(1);
         }
     }
     public void vampireSuck(){
@@ -237,9 +240,9 @@ public class Item : MonoBehaviour {
             px == x && py == (y - 1) ||
             px == x && py == (y + 1)){
             //transfer 1 health to vampire
-            this.updateValue(this.value + 1);
-            this.ItemFoundFeedback(false);
-            p.hitFromBehind();
+            updateValue(this.value + 1);
+            ItemFoundFeedback(false);
+            p.hitFromBehind(1);
         }
     }
     public void waspSting(){
@@ -256,7 +259,7 @@ public class Item : MonoBehaviour {
                 px == x && py == (y - 1) ||
                 px == x && py == (y + 1)){
                 this.animator.SetTrigger("Attack");
-                p.hitFromBehind();
+                p.hitFromBehind(1);
             }
         }
     }
@@ -280,11 +283,11 @@ public class Item : MonoBehaviour {
         this.timerValue--;
         if(breed){
             if(this.timerValue == 0){
-                this.timerValue = this.spreadPauseStep;
+                this.timerValue = this.timerStartValue;
                 plantTree();
             }
         } else {
-            if(this.timerValue == 0){
+            if(this.timerValue == 0) {
                 this.timerValue = -1;
                 GameObject item = Instantiate(this.spawnObject, this.transform.position, Quaternion.identity);
                 Item i = item.GetComponent<Item>();
@@ -294,10 +297,6 @@ public class Item : MonoBehaviour {
                 Destroy(this.gameObject);
             }
         }
-    }
-
-    public void feastUponMonsters(){
-        //see it there are monsters around and steal their health
     }
     public void shootRainbows(){
 
@@ -324,7 +323,7 @@ public class Item : MonoBehaviour {
                     newPosition.y = newPosition.y - BoardManager.hMultiplier;
                     drawRainbow = true;
                     if(px == x && py == y - 1){
-                        p.hitFromBehind();
+                        p.hitFromBehind(1);
                     }
                 }
             }
@@ -336,7 +335,7 @@ public class Item : MonoBehaviour {
                     newPosition.x = newPosition.x + BoardManager.wMultiplier;
                     drawRainbow = true;
                     if(px == x + 1 && py == y){
-                        p.hitFromBehind();
+                        p.hitFromBehind(1);
                     }
                 }
             }
@@ -348,7 +347,7 @@ public class Item : MonoBehaviour {
                     newPosition.y = newPosition.y + BoardManager.hMultiplier;
                     drawRainbow = true;
                     if(px == x && py == y + 1){
-                        p.hitFromBehind();
+                        p.hitFromBehind(1);
                     }
                 }
             }
@@ -360,7 +359,7 @@ public class Item : MonoBehaviour {
                     newPosition.x = newPosition.x - BoardManager.wMultiplier;
                     drawRainbow = true;
                     if(px == x - 1 && py == y){
-                        p.hitFromBehind();
+                        p.hitFromBehind(1);
                     }
                 }
             }
@@ -376,11 +375,68 @@ public class Item : MonoBehaviour {
     public void countDownZombieSpawn(){
         this.timerValue--;
         if (this.timerValue == 0) {
-            this.timerValue = this.spreadPauseStep;
+            this.timerValue = this.timerStartValue;
             GameManager.instance.boardScript.spawnZombieSpawn();
             SoundManager.instance.playFxClip(SoundManager.location_zombieSpawn);
         }
     }
+
+    public void feastUponTheLiving(){
+        this.updateTimer(--this.timerValue);
+        if (this.timerValue == 0) {
+
+            Instantiate(this.specialFx, this.transform.position, Quaternion.identity);
+            // steal health from monsters and objects
+            Item[] targets = new Item[12];
+            int pointer = 0;
+
+            int x = (int)(this.gameObject.transform.position.x / BoardManager.wMultiplier);
+            int y = (int)(this.gameObject.transform.position.y / BoardManager.hMultiplier);
+
+            int px = (int)(GameManager.instance.player.gameObject.transform.position.x / BoardManager.wMultiplier);
+            int py = (int)(GameManager.instance.player.gameObject.transform.position.y / BoardManager.hMultiplier);
+
+            pointer = addToAvailableMonsters(targets, x - 1, y, pointer);
+            pointer = addToAvailableMonsters(targets, x - 1, y -1, pointer);
+            pointer = addToAvailableMonsters(targets, x - 1, y + 1, pointer);
+
+            pointer = addToAvailableMonsters(targets, x, y - 1, pointer);
+            pointer = addToAvailableMonsters(targets, x, y + 1, pointer);
+
+            pointer = addToAvailableMonsters(targets, x + 1, y -1, pointer);
+            pointer = addToAvailableMonsters(targets, x + 1, y, pointer);
+            pointer = addToAvailableMonsters(targets, x + 1, y + 1, pointer);
+
+            pointer = addToAvailableMonsters(targets, x - 2, y, pointer);
+            pointer = addToAvailableMonsters(targets, x + 2, y, pointer);
+            pointer = addToAvailableMonsters(targets, x, y - 2, pointer);
+            pointer = addToAvailableMonsters(targets, x, y + 2, pointer);
+
+            for (int i=0; i<targets.Length; i++){
+                if(targets[i] != null  && !targets[i].isAlreadyDead){
+                    targets[i].updateValue(targets[i].value - 1);
+                    if(targets[i].value < 1){
+                        targets[i].isAlreadyDead = true;
+                        targets[i].ItemSpawnCoin();
+                    } else {
+                        StartCoroutine(AnimateFoundItem(Instantiate(this.foundFeedbackObject, targets[i].gameObject.transform.position, Quaternion.identity), false));
+                    }
+                    this.value ++;
+                }
+            }
+            // steal health from player
+            if(px - x > -2 && px - x < 2 && py - y > -2 && py - y < 2){
+                GameManager.instance.player.hitFromBehind(2);
+                this.value ++;
+                GameManager.instance.player.CheckIfGameOver();
+            }
+            if(this.value > this.maxValue){
+                this.value = this.maxValue;
+            }
+            updateTimer(this.timerStartValue);
+        }
+    }
+
     private void bushFire() {
         Item[] targets = new Item[4];
         int pointer = 0;
@@ -395,7 +451,7 @@ public class Item : MonoBehaviour {
             int choice = Random.Range(0, pointer);
             GameObject newFire = Instantiate(this.gameObject, targets[choice].gameObject.transform.position, this.transform.rotation);
             Item it = newFire.GetComponent<Item>();
-            it.timerValue = this.spreadPauseStep;
+            it.timerValue = this.timerValue;
             //replace item with bushfire
             Destroy(targets[choice].gameObject);
         }
@@ -466,7 +522,7 @@ public class Item : MonoBehaviour {
             GameObject newTree = Instantiate(this.spawnObject, treePos, this.transform.rotation);
             Item it = newTree.GetComponent<Item>();
             it.baseValue = it.value = 4;
-            it.timerValue = this.spreadPauseStep;
+            it.timerValue = this.timerValue;
             it.setShow(true);
         }
     }
@@ -475,6 +531,16 @@ public class Item : MonoBehaviour {
         if (x > -1 && x < GameManager.instance.boardScript.columns && y > -1 && y < GameManager.instance.boardScript.rows) {
             Item i = GameManager.instance.itemMap[x, y];
             if (i != null && i.show && i.type < 100) {
+                targets[pointer++] = i;
+            }
+        }
+        return pointer;
+    }
+
+        private int addToAvailableMonsters(Item[] targets, int x, int y, int pointer) {
+        if (x > -1 && x < GameManager.instance.boardScript.columns && y > -1 && y < GameManager.instance.boardScript.rows) {
+            Item i = GameManager.instance.itemMap[x, y];
+            if (i != null && i.show && i.type > 99) {
                 targets[pointer++] = i;
             }
         }
@@ -516,6 +582,7 @@ public class Item : MonoBehaviour {
                         i.setShow(true);
                     } else {
                         if (this.value >= i.value) {
+                            i.isAlreadyDead = true;
                             i.ItemSpawnCoin();
                         } else {
                             i.updateValue(i.value - this.value);
@@ -591,6 +658,7 @@ public class Item : MonoBehaviour {
         }
         Destroy(go);
     }
+    
     protected IEnumerator SmoothMovement(GameObject go, Vector3 end) {
         float inverseMoveTime = 12f;
         Rigidbody2D rb2D = go.GetComponent<Rigidbody2D>();

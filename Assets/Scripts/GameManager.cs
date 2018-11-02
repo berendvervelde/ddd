@@ -804,7 +804,7 @@ public class GameManager : MonoBehaviour {
                         it.breed();
                         break;
                         case 115:               // death
-                        it.feastUponMonsters();
+                        it.feastUponTheLiving();
                         break;
                     }
                 }
