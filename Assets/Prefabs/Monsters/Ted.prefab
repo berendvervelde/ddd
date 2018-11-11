@@ -311,10 +311,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   baseValue: 2
   minValue: 2
-  maxValue: 7
+  maxValue: 6
   minLevel: 1
-  maxLevel: 15
+  maxLevel: 20
   timerStartValue: 10
+  timerValue: 10
   valueRandomizer: 3
   timeValueMultiplier: 0.1
   showValue: 1
@@ -324,12 +325,14 @@ MonoBehaviour:
   tempObject: {fileID: 0}
   foundFeedbackObject: {fileID: 0}
   spawnObject: {fileID: 0}
+  specialFx: {fileID: 0}
   valuesCanvas: {fileID: 223926154409297490}
   nameCanvas: {fileID: 0}
   monsters: []
   items: []
   value: 0
   hideFromList: 0
+  isAlreadyDead: 0
   invocationSound: {fileID: 8300000, guid: 8dbedb43643e34b598492bd70eae4fd6, type: 3}
   show: 0
   spawnParticles: {fileID: 1776468103234216, guid: d8748036215964a78a9949e74df9102d,

@@ -15,13 +15,13 @@ public class GameManager : MonoBehaviour {
         level_low_monsters = 3,
         level_treasure = 4,
         level_potion = 5,
-        level_boss = 6,
-        level_wasteland = 7,
-        level_bushfire = 8,           // bushfire will 'convert' aligning times with other bushfires, changing items into monsters
-        level_necromancer = 9,        // the necromancer can add random zombies to the board
-        level_death = 10,              // death will hurt you if you come too close
-        level_locked = 11,              // you need to find a key to proceed
-        level_vampire = 12,
+        level_wasteland = 6,
+        level_bushfire = 7,           // bushfire will 'convert' aligning times with other bushfires, changing items into monsters
+        level_necromancer = 8,        // the necromancer can add random zombies to the board
+        level_death = 9,              // death will hurt you if you come too close
+        level_locked = 10,              // you need to find a key to proceed
+        level_vampire = 11,
+        level_rabits = 12,
         level_test = 13;
 
     private const int
@@ -53,13 +53,13 @@ public class GameManager : MonoBehaviour {
         "Kindergarten",
         "Treasury",
         "The alchemists floor",
-        "Boss level",
         "Wasteland",
         "Bushfire!",
         "Necromancer's den",
         "Death becomes you",
         "Locked down",
         "Bloodsucker!",
+        "Rabbid hole",
         "Testing"
     };
     
@@ -845,7 +845,6 @@ public class GameManager : MonoBehaviour {
             }
         }
     }
-
     private TileMapCoordinates convertCoordinatesToTileMap(float x, float y) {
         // 1f and 1.5 f is a correction for the board position in relation of the player at the start. Caused by the size of the sprites.
         return new TileMapCoordinates((int)((x + 1f) / BoardManager.wMultiplier), (int)((y + 1.5f) / BoardManager.hMultiplier));
@@ -882,5 +881,4 @@ public class GameManager : MonoBehaviour {
         this.enabled = true;
         SceneManager.LoadScene(0);
     }
-
 }

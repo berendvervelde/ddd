@@ -37,8 +37,8 @@ public class Item : MonoBehaviour {
 		0: restore health potion (red)
         1: unknown potion, health
 		2: poison potion
-		3: special potion (grey)
-		4: special potion (blue)
+		3: 
+		4: 
         5: unknown potion, poison
 		...
 		20: sword
@@ -55,21 +55,21 @@ public class Item : MonoBehaviour {
 		40: bomb
 		...
 		100: standard enemy
-        101: sheep
-        102: bushfire
-        103: zombie
-        104: Evil Larry
-        105: Count de Nostradame
-        106: Prancer
+        101: sheep                  - gives health if not hit with weapon
+        102: bushfire               - burns items
+        103: zombie                 - hits from the right
+        104: Evil Larry             - spawns zombies and weapons
+        105: Count de Nostradame    - steals health from player
+        106: Prancer                - unicorn shoots rainbows
         107: sebastian              - 50% chance of poison if hit with bare hands
         108: wasp                   - 50% chance of stinging you if you walk past
         109: egg                    - will hatch into snakewoman
-        110: snakewoman
-        111: small tree
-        112: medium tree
+        110: snakewoman             - comes out of an egg
+        111: small tree             - grows into medium tree
+        112: medium tree            - grows into large tree
         113: large tree
         114: Bunny                  - breeder
-        115: DEATH                  - impossible to kill
+        115: DEATH                  - steals health from everyone
 		...
 	*/
     private Text values;
@@ -187,7 +187,12 @@ public class Item : MonoBehaviour {
     public void updateValue(int value) {
         this.value = value;
         if (this.showValue) {
-            this.values.text = this.value.ToString();
+            // bomb or death
+            if (this.type == 40 || this.type == 115){
+                this.values.text = this.timerValue + "/" + this.value;
+            } else {
+                this.values.text = this.value.ToString();
+            }
         }
     }
     public void updateTimer(int timer) {

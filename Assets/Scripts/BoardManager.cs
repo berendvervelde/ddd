@@ -28,8 +28,6 @@ public class BoardManager : MonoBehaviour {
 		location_unknown_potion_health = 6,
 
 		location_lowMonsters = 4,
-		location_midMonsters = 6,
-		location_highMonsters = 4,
         location_bushMonster = 6,
         location_zombie = 7,
         location_larry = 8,
@@ -110,19 +108,12 @@ public class BoardManager : MonoBehaviour {
     //Sets up the outer walls and floor (background) of the game board.
     void boardSetup() {
         //Instantiate Board and set boardHolder to its transform.
-        boardHolder = new GameObject("Board").transform;
+        this.boardHolder = new GameObject("Board").transform;
 
         for (int x = -1; x < this.columns + 1; x++) {
             for (int y = -1; y < this.rows + 1; y++) {
                 GameObject toInstantiate;
                 if (x == -1 || x == this.columns || y == -1 || y == rows) {
-                    /*
-						top left,
-						top-right,
-						left,
-						right,
-						top1 - top4
-					 */
                     if (x == -1 && y == -1) {
                         toInstantiate = wallTiles[Random.Range(4, 8)];
                     } else if (x == -1 && y == rows) {
@@ -146,8 +137,7 @@ public class BoardManager : MonoBehaviour {
                     toInstantiate = floorTiles[tileNr];
                 }
 
-                //Instantiate the GameObject instance using the prefab chosen for toInstantiate at the Vector3 corresponding to current grid position in loop, cast it to GameObject.
-                GameObject instance = Instantiate(toInstantiate, new Vector3(x * wMultiplier, y * hMultiplier, 0f), Quaternion.identity) as GameObject;
+                GameObject instance = Instantiate(toInstantiate, new Vector3(x * wMultiplier, y * hMultiplier, 0f), Quaternion.identity);
                 //Set the parent of our newly instantiated object instance to boardHolder, this is just organizational to avoid cluttering hierarchy.
                 instance.transform.SetParent(boardHolder);
             }
@@ -343,10 +333,23 @@ public class BoardManager : MonoBehaviour {
                 itemCount += 1;
                 monsterCount = (int)(availablePlaces * 3 / 10);
                 break;
-             case GameManager.level_vampire:
+            case GameManager.level_vampire:
                 this.isLocked = true;
                 monsterCount = (int)(availablePlaces * 1 / 10);
                 AddTiles(this.monsterTiles[BoardManager.location_vampire], 1);
+                itemCount += 2;
+                break;
+            case GameManager.level_rabits:
+                int bunnyCount = (int)(availablePlaces * 1 / 10);
+                this.activemonsters += bunnyCount;
+                itemCount += bunnyCount;
+                AddTiles(this.monsterTiles[BoardManager.location_bunny], bunnyCount);
+                monsterCount = (int)(availablePlaces * 1 / 10);
+                break;
+            case GameManager.level_death:
+                this.isLocked = true;
+                monsterCount = (int)(availablePlaces * 1 / 10);
+                AddTiles(this.monsterTiles[BoardManager.location_death], 2);
                 itemCount += 2;
                 break;
             case GameManager.level_test:
@@ -370,9 +373,11 @@ public class BoardManager : MonoBehaviour {
         // add items
         AddRandomTiles(this.itemTiles, 0, this.itemTiles.Length, consumableCount);
 
-        // activemonsters is used to determine if all monsters have been killed and a gem is won.
+        // Activemonsters is used to determine if all monsters have been killed and a gem is won. 
+        // This won't work on levels where monsters spawn
 		this.activemonsters += monsterCount;
 
+        // Itemcount is used to determine if all monsters and items have registered with the gamemanager
         itemCount += monsterCount + 
 			consumableCount + 
 			weaponCount;
@@ -382,30 +387,75 @@ public class BoardManager : MonoBehaviour {
 
     private int setLevelType(int level) {
         if (level == 1){
-             return GameManager.level_test;
-        }
-        if (level < 2) {
+            //return GameManager.level_test;
             return GameManager.level_low_monsters;
         }
-        if (level == 2) {
-            return GameManager.level_bomb;
+        if (level < 3) {
+            return GameManager.level_low_monsters;
         }
         if (level == 3) {
-            return GameManager.level_treasure;
-        }
-		if (level == 4) {
             return GameManager.level_wasteland;
         }
+        if (level == 4) {
+            return GameManager.level_bomb;
+        }
         if (level == 5) {
+            return GameManager.level_treasure;
+        }
+        if(level == 8){
+            return GameManager.level_rabits;
+        }
+        if (level == 10) {
             return GameManager.level_potion;
         }
-        if (level == 6) {
+        if (level == 14) {
             return GameManager.level_bushfire;
         }
-        if(level == 10){
+        if (level == 18) {
+            return GameManager.level_bomb;
+        }
+        if(level == 20){
+            return GameManager.level_vampire;
+        }
+        if (level == 21) {
+            return GameManager.level_wasteland;
+        }
+        if (level == 22) {
+            return GameManager.level_treasure;
+        }
+        if (level == 23) {
+            return GameManager.level_potion;
+        }
+        if (level == 27) {
+            return GameManager.level_bushfire;
+        }
+        if(level == 30){
             return GameManager.level_necromancer;
         }
-        
+        if (level == 31) {
+            return GameManager.level_treasure;
+        }
+        if (level == 32) {
+            return GameManager.level_wasteland;
+        }
+        if (level == 39) {
+            return GameManager.level_bomb;
+        }
+        if(level == 40){
+            return GameManager.level_rabits;
+        }
+        if (level == 45) {
+            return GameManager.level_bushfire;
+        }
+        if(level == 50){
+            return GameManager.level_death;
+        }
+        if (level == 51) {
+            return GameManager.level_treasure;
+        }
+        if (level == 52) {
+            return GameManager.level_treasure;
+        }
         return GameManager.level_standard;
     }
 

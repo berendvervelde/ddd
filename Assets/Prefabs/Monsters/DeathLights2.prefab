@@ -37,7 +37,7 @@ GameObject:
   - component: {fileID: 4577199845796818}
   - component: {fileID: 114570462767531048}
   m_Layer: 0
-  m_Name: DeathLights
+  m_Name: DeathLights2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -145,8 +145,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: -1230106391
-  m_SortingLayer: 2
+  m_SortingLayerID: -1936902571
+  m_SortingLayer: 3
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: a6f8af5e9671a478fbfd238ec90ec412, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -191,8 +191,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: -1230106391
-  m_SortingLayer: 2
+  m_SortingLayerID: -1936902571
+  m_SortingLayer: 3
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: a6f8af5e9671a478fbfd238ec90ec412, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
