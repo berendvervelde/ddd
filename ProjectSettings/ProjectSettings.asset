@@ -154,7 +154,7 @@ PlayerSettings:
   applicationIdentifier:
     Android: com.omg.doomed
   buildNumber: {}
-  AndroidBundleVersionCode: 3
+  AndroidBundleVersionCode: 4
   AndroidMinSdkVersion: 22
   AndroidTargetSdkVersion: 0
   AndroidPreferredInstallLocation: 1

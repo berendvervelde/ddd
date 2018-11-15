@@ -211,6 +211,7 @@ public class GameManager : MonoBehaviour {
         this.permanentData.highscore = 0;
         this.permanentData.gold = 0;
         this.permanentData.knightBaseHealth = 11;
+        this.permanentData.dwarfBaseHealth = 10;
         this.permanentData.wizardBaseHealth = 9;
         this.permanentData.rogueBaseHealth = 9;
         this.permanentData.rangerBaseHealth = 10;
