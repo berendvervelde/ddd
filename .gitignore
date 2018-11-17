@@ -4,7 +4,6 @@
 [Bb]uild/
 [Bb]uilds/
 Assets/AssetStoreTools*
-Assets/audio/music/
 
 # Visual Studio cache directory
 .vs/
@@ -36,5 +35,7 @@ sysinfo.txt
 *.apk
 *.unitypackage
 
-# these are private!
+# these are private or not licenced by me
 *.keystore
+Assets/audio/music/
+Assets/fonts/

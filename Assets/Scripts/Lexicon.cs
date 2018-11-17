@@ -5,14 +5,26 @@ using UnityEngine.UI;
 
 public class Lexicon : MonoBehaviour {
 
-	public Button bPrev, bNext;
+	public Button bPrev, bNext, bItems, bMonsters;
 	public GameObject [] items;
+	public GameObject [] monsters;
+	public Text descriptionText;
 	private GameObject [] instantiatedItems;
+	private GameObject [] instantiatedMonsters;
 	private GameObject selectedItem;
 	private int index = 0;
 	private Text description;
+	private bool itemsSelected = true;
 
-	private string [] descriptions = {
+	private string [] descriptionsItems = {
+		"Collect it, spend it. Or swim in it.",
+		"Fighting monsters can be taxing so grab these to improve your health. Read prescription label for possible side effects.",
+		"Can contain anything from gold to health to monsters.",
+		"Bombs will go off after a contdown period. They can also be picked up and thrown. Cool!",
+		"Why would you want to drink one of those!?!. It'll hurt you over time. A health potion will counteract it's effect.",
+		"Could be health or poison. Only one way to find out I guess..."
+		};
+	private string [] descriptionsMonsters = {
 		"Collect it, spend it. Or swim in it.",
 		"Fighting monsters can be taxing so grab these to improve your health. Read prescription label for possible side effects.",
 		"Can contain anything from gold to health to monsters.",
@@ -29,9 +41,10 @@ public class Lexicon : MonoBehaviour {
 		prevChar.onClick.AddListener(delegate {selectItem(-1); });
 		Button nextChar = bNext.GetComponent<Button>();
 		nextChar.onClick.AddListener(delegate {selectItem(1); });
-		this.description = findTextComponent(this.gameObject);
+		this.description = descriptionText.GetComponent<Text>();
 
 		this.instantiatedItems = new GameObject [items.Length];
+		this.instantiatedMonsters = new GameObject [monsters.Length];
 		instanciateItem(items);
 		updateSelectedItem();
 	}
@@ -45,32 +58,24 @@ public class Lexicon : MonoBehaviour {
 		}
 	}
 
-	private Text findTextComponent(GameObject go){
-		// find the right child by finding its tag
-		for (int i = 0; i < go.transform.childCount; i++) {
-			if(go.transform.GetChild (i).gameObject.tag == "HeldCanvas"){
-				return go.transform.GetChild (i).gameObject.GetComponent<Text>();
-			}
-		}
-        return null;
-	}
-
 	private void selectItem(int direction) {
 		this.index += direction;
+		int length = this.itemsSelected ? items.Length : monsters.Length;
+
 		if(this.index < 0){
-			this.index = items.Length -1;
-		} else if (this.index > items.Length -1 ){
+			this.index = length - 1;
+		} else if (this.index > length -1 ){
 			this.index = 0;
 		}
 		updateSelectedItem();
 	}
 
 	private void updateSelectedItem(){
-		this.description.text = descriptions[this.index];
+		this.description.text = this.itemsSelected ? descriptionsItems[this.index] : descriptionsMonsters[this.index];
 		if (selectedItem != null){
 			selectedItem.SetActive(false);
 		}
-		selectedItem = instantiatedItems[index];
+		selectedItem = this.itemsSelected ? instantiatedItems[index] : instantiatedMonsters[index];
 		selectedItem.SetActive(true);
 	}
 }

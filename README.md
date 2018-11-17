@@ -18,11 +18,13 @@ version 0.9
 TODO: testing, level design, level balancing
 
 version 0.8
-TODO: permanent updates for gold, monsters and items in lexicon, about & thanks screen
+TODO: permanent updates for gold, monsters and items in lexicon
 
 -----------------------------------------
 version 0.7
-DONE: all monsters done, death, treemonster, egg/snake woman added, double gold and fire bugsfixed
+all monsters done; death, treemonster, egg/snake woman added, 
+double gold and fire bugs fixed
+about & thanks screen
 
 version 0.6
 added poison spider
