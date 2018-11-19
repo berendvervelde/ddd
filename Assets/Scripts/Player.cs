@@ -492,7 +492,7 @@ public class Player : MonoBehaviour {
         GameObject b = Instantiate(this.bomb, i.gameObject.transform.position, Quaternion.identity);
         Item bi = b.GetComponent<Item>();
         bi.hideFromList = true;
-        bi.setShow(true);
+        bi.setShow(true, false);
         bi.value = this.heldItemValue;
         // calling countdown with timevalue 0 will detonate the bomb right away
         bi.timerValue = 0;

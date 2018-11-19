@@ -105,7 +105,7 @@ public class Item : MonoBehaviour {
         }
         if (this.type > 99) {
             GameManager.instance.activeMonsters--;
-            Debug.Log("active monsters: " + GameManager.instance.activeMonsters);
+            //Debug.Log("active monsters: " + GameManager.instance.activeMonsters);
         }
     }
     public void finishFullInit(GameObject[] m, GameObject[] i) {
@@ -124,7 +124,7 @@ public class Item : MonoBehaviour {
         }
         return null;
     }
-    public void setShow(bool particles) {
+    public void setShow(bool particles, bool silent) {
         if (particles) {
             Instantiate(spawnParticles, this.transform.position, this.transform.rotation);
         }
@@ -134,7 +134,7 @@ public class Item : MonoBehaviour {
         }
         this.show = true;
 
-        if (this.invocationSound != null) {
+        if (this.invocationSound != null && !silent) {
             if (this.type < 100) {
                 SoundManager.instance.playFx2(this.invocationSound);
             } else {
@@ -147,7 +147,7 @@ public class Item : MonoBehaviour {
         // spawn coin
         GameObject coin = Instantiate(this.coin, this.transform.position, Quaternion.identity);
         Item i = coin.GetComponent<Item>();
-        i.setShow(true);
+        i.setShow(true, false);
         i.value = this.baseValue;
         // die
         //GameManager.instance.RemoveItemFromList(this);
@@ -169,7 +169,7 @@ public class Item : MonoBehaviour {
             item = Instantiate(this.monsters[Random.Range(0, this.items.Length)], this.transform.position, Quaternion.identity);
         }
         i = item.GetComponent<Item>();
-        i.setShow(true);
+        i.setShow(true, false);
         i.value = this.baseValue;
         GameManager.instance.AddItemToList(i);
         Destroy(this.gameObject);
@@ -278,7 +278,7 @@ public class Item : MonoBehaviour {
     private void hatchEgg(){
         GameObject item = Instantiate(this.spawnObject, this.transform.position, Quaternion.identity);
         Item i = item.GetComponent<Item>();
-        i.setShow(true);
+        i.setShow(true, false);
         i.value = this.baseValue + 10;
         GameManager.instance.AddItemToList(i);
         Destroy(this.gameObject);
@@ -296,7 +296,7 @@ public class Item : MonoBehaviour {
                 this.timerValue = -1;
                 GameObject item = Instantiate(this.spawnObject, this.transform.position, Quaternion.identity);
                 Item i = item.GetComponent<Item>();
-                i.setShow(true);
+                i.setShow(true, false);
                 i.value = i.baseValue = this.baseValue + 3;
                 GameManager.instance.AddItemToList(i);
                 Destroy(this.gameObject);
@@ -494,7 +494,7 @@ public class Item : MonoBehaviour {
                 Item it = newMonster.GetComponent<Item>();
                 it.baseValue = it.value = 2;
                 it.timerValue = 4;
-                it.setShow(true);
+                it.setShow(true, false);
             }
         }
     }
@@ -528,7 +528,7 @@ public class Item : MonoBehaviour {
             Item it = newTree.GetComponent<Item>();
             it.baseValue = it.value = 4;
             it.timerValue = this.timerValue;
-            it.setShow(true);
+            it.setShow(true, false);
         }
     }
 
@@ -584,7 +584,7 @@ public class Item : MonoBehaviour {
                 // coin does not spawn coin
                 if (i.type != 31) {
                     if (!i.show) {
-                        i.setShow(true);
+                        i.setShow(true, false);
                     } else {
                         if (this.value >= i.value) {
                             i.isAlreadyDead = true;

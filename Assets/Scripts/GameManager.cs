@@ -630,7 +630,7 @@ public class GameManager : MonoBehaviour {
        if (x > -1 && x < this.boardScript.columns && y > -1 && y < this.boardScript.rows) {
             Item i = this.itemMap[x, y];
             if (i != null && !i.show) {
-                i.setShow(true);
+                i.setShow(true, false);
                 return true;
             }
         }
