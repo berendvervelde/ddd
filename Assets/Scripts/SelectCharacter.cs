@@ -2,15 +2,17 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class SelectCharacter : MonoBehaviour {
 
-	public Button bPrev, bNext;
+	public Button bPrev, bNext, bBack;
+	public Text descriptionText, propertiesText;
 	public GameObject [] characters;
 	private GameObject [] instantiatedCharacters;
 	private GameObject selectedCharacter;
 	private int index = 0;
-	private Text description;
+	private Text description, properties;
 
 	private string [] descriptions = {
 		"The knight slays dragons, rescues damsels and find grails (preferably holy). He has a special attack when he is surrounded.",
@@ -28,27 +30,28 @@ public class SelectCharacter : MonoBehaviour {
 		prevChar.onClick.AddListener(delegate {selectCharacter(-1); });
 		Button nextChar = bNext.GetComponent<Button>();
 		nextChar.onClick.AddListener(delegate {selectCharacter(1); });
-		this.description = findTextComponent(this.gameObject);
+		this.description = this.descriptionText.GetComponent<Text>();
+		this.properties = this.propertiesText.GetComponent<Text>();
 
 		this.instantiatedCharacters = new GameObject [characters.Length];
 		instanciateCharacters(characters);
 		updateSelectedCharacter();
+
+		Button backButton = bBack.GetComponent<Button>();
+		backButton.onClick.AddListener(delegate {loadSceneOnClick(); });
+	}
+
+	private void loadSceneOnClick(){
+		// the selectCharaterscene should normally return to the introscene unless it is used from the IAP scene.
+		int sceneIndex = GameManager.instance.characterChoiceReturnSceneIndex;
+		GameManager.instance.characterChoiceReturnSceneIndex = 0;
+		SceneManager.LoadScene(sceneIndex);
 	}
 	private void instanciateCharacters(GameObject [] characters) {
 		for (int i=0; i<characters.Length; i++){
 			instantiatedCharacters[i] = Instantiate(characters[i], this.gameObject.transform.localPosition, Quaternion.identity);
 			instantiatedCharacters[i].SetActive(false);
 		}
-	}
-
-	private Text findTextComponent(GameObject go){
-		// find the right child by finding its tag
-		for (int i = 0; i < go.transform.childCount; i++) {
-			if(go.transform.GetChild (i).gameObject.tag == "HeldCanvas"){
-				return go.transform.GetChild (i).gameObject.GetComponent<Text>();
-			}
-		}
-        return null;
 	}
 
 	private void selectCharacter(int direction) {
@@ -73,5 +76,31 @@ public class SelectCharacter : MonoBehaviour {
 		}
 		selectedCharacter = instantiatedCharacters[index];
 		selectedCharacter.SetActive(true);
+
+		int health = 0;
+		int strength = 0;
+		switch (GameManager.instance.dataController.selectedCharacter){
+			case GameManager.character_knight:
+				health = GameManager.instance.permanentData.knightBaseHealth;
+				strength = GameManager.instance.permanentData.knightStrength;
+			break;
+			case GameManager.character_ranger:
+				health = GameManager.instance.permanentData.rangerBaseHealth;
+				strength = GameManager.instance.permanentData.rangerStrength;
+			break;
+			case GameManager.character_dwarf:
+				health = GameManager.instance.permanentData.dwarfBaseHealth;
+				strength = GameManager.instance.permanentData.dwarfStrength;
+			break;
+			case GameManager.character_rogue:
+				health = GameManager.instance.permanentData.rogueBaseHealth;
+				strength = GameManager.instance.permanentData.rogueStrength;
+			break;
+			case GameManager.character_wizard:
+				health = GameManager.instance.permanentData.wizardBaseHealth;
+				strength = GameManager.instance.permanentData.wizardStrength;
+			break;
+		}
+		this.properties.text = "Current health: " + health + ", current strength: " + strength;
 	}
 }

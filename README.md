@@ -17,10 +17,13 @@ TODO: integration google play services
 version 0.9
 TODO: testing, level design, level balancing
 
-version 0.8
-TODO: permanent updates for gold, monsters and items in lexicon
-
 -----------------------------------------
+version 0.8
+permanent updates for gold,
+strength addition,
+monsters and items in lexicon,
+minor bugfixes
+
 version 0.7
 all monsters done; death, treemonster, egg/snake woman added, 
 double gold and fire bugs fixed

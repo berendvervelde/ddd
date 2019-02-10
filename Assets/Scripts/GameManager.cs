@@ -44,7 +44,8 @@ public class GameManager : MonoBehaviour {
         type_extraGem = 2,
         type_extraLife = 3,
         type_fullHealth = 4,
-        type_weapon = 5;
+        type_weapon = 5,
+        type_reveal = 6;
 
     private static readonly List<String> levelTypeText = new List<String>(){
         "",
@@ -161,6 +162,7 @@ public class GameManager : MonoBehaviour {
         "Dust"
     };
     public static GameManager instance = null;              //Static instance of GameManager which allows it to be accessed by any other script.
+    [HideInInspector] public int characterChoiceReturnSceneIndex = 0;
     [HideInInspector] public BoardManager boardScript;      //Store a reference to our BoardManager which will set up the level.
     [HideInInspector] public DataController dataController;
     [HideInInspector] public bool playersTurn = true;
@@ -184,6 +186,7 @@ public class GameManager : MonoBehaviour {
     private Toggle extraGemToggle;
     private Toggle fullHealthToggle;
     private Toggle addWeaponToggle;
+    private Toggle revealToggle;
     private int declaredItems = 0;                      // if declareditems equals items itemsOnBoard we know that all items have initialized
     private int itemsOnBoard = 0;
     [HideInInspector] public bool continueAvailable = false;
@@ -192,6 +195,7 @@ public class GameManager : MonoBehaviour {
     private GameProgress restoredGameProgress;
     [HideInInspector] public int activeMonsters;
     private int gameState = GameManager.state_intro;
+    private bool revealAllAtStart = false;
 
     void Awake() {
         //Make GameManager singleton
@@ -215,6 +219,11 @@ public class GameManager : MonoBehaviour {
         this.permanentData.wizardBaseHealth = 9;
         this.permanentData.rogueBaseHealth = 9;
         this.permanentData.rangerBaseHealth = 10;
+        this.permanentData.knightStrength = 2;
+        this.permanentData.dwarfStrength = 1;
+        this.permanentData.wizardStrength = 2;
+        this.permanentData.rogueStrength = 1;
+        this.permanentData.rangerStrength = 1;
         this.dataController.savePermanentData(this.permanentData);
     }
     void Start(){
@@ -256,10 +265,17 @@ public class GameManager : MonoBehaviour {
         switch (this.gameState) {
             case GameManager.state_setup_done:
                 if(this.continueClicked){
+                    // gems only last one level
+                    this.gameProgress.gems = 0;
                     StartCoroutine(FadeoutScreenOverlay());
                     setupPlayer();
                     this.gameState = GameManager.state_fadeout_overlay;
                     this.continueClicked = false;
+
+                    if(this.revealAllAtStart){
+                        StartCoroutine(TurnAllCards());
+                        this.revealAllAtStart = false;
+                    } 
                 }
                 break;
             case GameManager.state_game:
@@ -281,21 +297,26 @@ public class GameManager : MonoBehaviour {
         }
     }
     private void setupPlayer(){
-        switch (this.gameProgress.playerChoice) {
+        switch (this.player.selectedCharacter ) {
             case GameManager.character_knight:
                 this.player.baseHealth = this.player.maxHealth  = this.permanentData.knightBaseHealth;
+                this.player.playerStrength = this.permanentData.knightStrength;
                 break;
             case GameManager.character_wizard:
                 this.player.baseHealth = this.player.maxHealth  = this.permanentData.wizardBaseHealth;
+                this.player.playerStrength = this.permanentData.wizardStrength;
                 break;
             case GameManager.character_ranger:
                 this.player.baseHealth = this.player.maxHealth  = this.permanentData.rangerBaseHealth;
+                this.player.playerStrength = this.permanentData.rangerStrength;
                 break;
             case GameManager.character_rogue:
                 this.player.baseHealth = this.player.maxHealth  = this.permanentData.rogueBaseHealth;
+                this.player.playerStrength = this.permanentData.rogueStrength;
                 break;
             case GameManager.character_dwarf:
                 this.player.baseHealth = this.player.maxHealth  = this.permanentData.dwarfBaseHealth;
+                this.player.playerStrength = this.permanentData.dwarfStrength;
                 break;
         }
         this.player.maxHealth = this.player.baseHealth;
@@ -335,7 +356,7 @@ public class GameManager : MonoBehaviour {
         this.declaredItems = 0;
         this.itemsOnBoard = this.boardScript.SetupScene(this.gameProgress.level, this.gameProgress.steps);
         this.activeMonsters = this.boardScript.activemonsters;
-        Debug.Log("active monsters: " + this.activeMonsters);
+        //Debug.Log("active monsters: " + this.activeMonsters);
         
         this.itemMap = new Item[this.boardScript.columns, this.boardScript.rows];
 
@@ -392,6 +413,9 @@ public class GameManager : MonoBehaviour {
         this.fullHealthToggle.onValueChanged.AddListener(delegate { updateGemBenefits(GameManager.type_fullHealth, 0);});
         this.addWeaponToggle = this.player.addWeaponToggle.GetComponent<Toggle>();
         this.addWeaponToggle.onValueChanged.AddListener(delegate { updateGemBenefits(GameManager.type_weapon, 0);});
+        this.revealToggle = this.player.revealToggle.GetComponent<Toggle>();
+        this.revealToggle.onValueChanged.AddListener(delegate { updateGemBenefits(GameManager.type_reveal, 0);});
+
 
         this.maxHealthMinusButton.interactable = false;
         this.scoreMultiplierMinusButton.interactable = false;
@@ -402,10 +426,12 @@ public class GameManager : MonoBehaviour {
             this.extraGemToggle.interactable = false;
             this.addWeaponToggle.interactable = false;
             this.fullHealthToggle.interactable = false;
+            this.revealToggle.interactable = false;
             this.gemAmountText.text = "You have no gems. Better luck next time.";
         }else if(this.gameProgress.gems == 1){
             this.extraLifeToggle.interactable = false;
             this.extraGemToggle.interactable = false;
+            this.revealToggle.interactable = false;
             this.gemAmountText.text = "You have 1 gem. Spend it wisely.";
         } else if(this.gameProgress.gems > 1) {
             this.gemAmountText.text = "You have " + this.gameProgress.gems + " gems. Spend them wisely.";
@@ -476,6 +502,15 @@ public class GameManager : MonoBehaviour {
                 this.gameProgress.gems += 1;
             }
             break;
+            case GameManager.type_reveal:
+            if(this.revealToggle.isOn){
+                this.revealAllAtStart = true;
+                this.gameProgress.gems -= 2;
+            } else {
+                this.revealAllAtStart = false;
+                this.gameProgress.gems += 2;
+            }
+            break;
         }
 
         this.maxHealthText.text = this.gameProgress.maxHealth.ToString();
@@ -515,6 +550,11 @@ public class GameManager : MonoBehaviour {
             } else {
                 this.fullHealthToggle.interactable = false;
             }
+            if(this.revealToggle.isOn){
+                this.revealToggle.interactable = true;
+            } else {
+                this.revealToggle.interactable = false;
+            }
             this.gemAmountText.text = "You have no more gems.";
         } else if(this.gameProgress.gems == 1){
             this.maxHealthPlusButton.interactable = true;
@@ -535,6 +575,11 @@ public class GameManager : MonoBehaviour {
             } else {
                 this.extraLifeToggle.interactable = false;
             }
+            if (this.revealToggle.isOn){
+                this.revealToggle.interactable = true;
+            } else {
+                this.revealToggle.interactable = false;
+            }
             this.gemAmountText.text = "You have 1 gem left.";
         }else if(this.gameProgress.gems > 1){
             this.addWeaponToggle.interactable = true;
@@ -547,6 +592,7 @@ public class GameManager : MonoBehaviour {
             }
             this.extraGemToggle.interactable = true;
             this.extraLifeToggle.interactable = true;
+            this.revealToggle.interactable = true;
             this.gemAmountText.text = "You have " + this.gameProgress.gems + " gems left.";
         }
     }
@@ -652,6 +698,19 @@ public class GameManager : MonoBehaviour {
         }
         setActive(px, py + 1);
         playersTurn = true;
+        waiting = false;
+    }
+
+    IEnumerator TurnAllCards() {
+        bool wait = false;
+        for(int i=0; i < this.itemMap.GetLength(0); i++){
+            for(int j=0; j < this.itemMap.GetLength(1); j++){
+                wait = setActive(i, j);
+                if(wait){
+                    yield return new WaitForSeconds(0.2f);
+                }
+            }
+        }
         waiting = false;
     }
 

@@ -8,6 +8,11 @@ public class PermanentData {
 	public int rogueBaseHealth;
 	public int rangerBaseHealth;
 	public int dwarfBaseHealth;
+    public int knightStrength;
+	public int wizardStrength;
+	public int rogueStrength;
+	public int rangerStrength;
+	public int dwarfStrength;
 
     public byte[] Serialize() {
         using (MemoryStream m = new MemoryStream()) {
@@ -19,6 +24,11 @@ public class PermanentData {
 				writer.Write(rogueBaseHealth);
 				writer.Write(rangerBaseHealth);
 				writer.Write(dwarfBaseHealth);
+                writer.Write(knightStrength);
+                writer.Write(wizardStrength);
+                writer.Write(rogueStrength);
+                writer.Write(rangerStrength);
+                writer.Write(dwarfStrength);
             }
             return m.ToArray();
         }
@@ -34,6 +44,11 @@ public class PermanentData {
 				result.rogueBaseHealth = reader.ReadInt32();
 				result.rangerBaseHealth = reader.ReadInt32();
 				result.dwarfBaseHealth = reader.ReadInt32();
+                result.knightStrength = reader.ReadInt32();
+                result.wizardStrength = reader.ReadInt32();
+                result.rogueStrength = reader.ReadInt32();
+                result.rangerStrength = reader.ReadInt32();
+                result.dwarfStrength = reader.ReadInt32();
             }
         }
         return result;

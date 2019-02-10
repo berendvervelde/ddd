@@ -39,6 +39,7 @@ public class Player : MonoBehaviour {
     public GameObject gameOverOverlay;
     public Text gameOverScoreText;
 
+    // here are all gem benefit controls
     public Text gemAmountText;
     public Text maxHealthText;
     public Text scoreMultiplierText;
@@ -50,6 +51,7 @@ public class Player : MonoBehaviour {
     public Toggle extraGemToggle;
     public Toggle fullHealthToggle;
     public Toggle addWeaponToggle;
+    public Toggle revealToggle;
 
 
     public GameObject[] Characters;
@@ -69,6 +71,7 @@ public class Player : MonoBehaviour {
     [HideInInspector] public int health;
     [HideInInspector] public int maxHealth;     //basehealth + gem health
     [HideInInspector] public int baseHealth;    // max health of playerclass
+    [HideInInspector] public int playerStrength;
     [HideInInspector] public int scoreMultiplier = 1;
     [HideInInspector] public int poisonCount = 0;
     [HideInInspector] public int steps;
@@ -132,21 +135,27 @@ public class Player : MonoBehaviour {
         this.goldPanelText.text = this.gold.ToString();
     }
     private void initPlayerProperties(){
+        this.playerStrength = 0;
         switch (this.selectedCharacter) {
             case GameManager.character_knight:
                 this.health = this.maxHealth = this.baseHealth = GameManager.instance.permanentData.knightBaseHealth;
+                this.playerStrength = GameManager.instance.permanentData.knightStrength;
                 break;
             case GameManager.character_wizard:
                 this.health = this.maxHealth = this.baseHealth = GameManager.instance.permanentData.wizardBaseHealth;
+                this.playerStrength = GameManager.instance.permanentData.wizardStrength;
                 break;
             case GameManager.character_ranger:
                 this.health = this.maxHealth = this.baseHealth = GameManager.instance.permanentData.rangerBaseHealth;
+                this.playerStrength = GameManager.instance.permanentData.rangerStrength;
                 break;
             case GameManager.character_rogue:
                 this.health = this.maxHealth = this.baseHealth = GameManager.instance.permanentData.rogueBaseHealth;
+                this.playerStrength = GameManager.instance.permanentData.rogueStrength;
                 break;
             case GameManager.character_dwarf:
                 this.health = this.maxHealth = this.baseHealth = GameManager.instance.permanentData.dwarfBaseHealth;
+                this.playerStrength = GameManager.instance.permanentData.dwarfStrength;
                 break;
         }
         this.scoreMultiplier = 1;
@@ -214,14 +223,12 @@ public class Player : MonoBehaviour {
         this.heldItemValueText.text = this.heldItemValue.ToString();
         this.heldItemType = type;
     }
-
     public void disarmPlayer(){
         if (this.heldItem != null) {
             Destroy(this.heldItem);
             this.heldItem = null;
         }
     }
-
     private void attachBombToSelf(int type, int value) {
         // already holding a weapon?
         if (this.heldItem != null) {
@@ -637,7 +644,7 @@ public class Player : MonoBehaviour {
                 case 23:
                 case 24:
                     // weapon
-                    attachWeaponToSelf(i.type, i.value);
+                    attachWeaponToSelf(i.type, i.value + this.playerStrength);
                     Destroy(other.gameObject);
                     break;
                 case 31:
@@ -666,7 +673,6 @@ public class Player : MonoBehaviour {
             }
         }
     }
-
     public void CheckIfGameOver() {
         if (this.health <= 0) {
             if (this.extraLife) {

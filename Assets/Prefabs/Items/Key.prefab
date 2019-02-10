@@ -296,6 +296,7 @@ MonoBehaviour:
   minLevel: 1
   maxLevel: -1
   timerStartValue: 10
+  timerValue: 10
   valueRandomizer: 1
   timeValueMultiplier: 0.1
   showValue: 0
@@ -306,12 +307,14 @@ MonoBehaviour:
   foundFeedbackObject: {fileID: 1819742021106102, guid: 6660378d36a7d46e1a42af06e5079350,
     type: 2}
   spawnObject: {fileID: 0}
+  specialFx: {fileID: 0}
   valuesCanvas: {fileID: 223651354607792754}
   nameCanvas: {fileID: 0}
   monsters: []
   items: []
   value: 0
   hideFromList: 0
+  isAlreadyDead: 0
   invocationSound: {fileID: 8300000, guid: 28f1a1ae8fd9b472695e33fc69c23119, type: 3}
   show: 0
   spawnParticles: {fileID: 1391412058790984, guid: 72b7b6841d7874cf197b91661463029f,
@@ -424,7 +427,7 @@ SpriteRenderer:
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 1.2, y: 1.2}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
